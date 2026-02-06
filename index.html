@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCNA Master - Exam Prep & Lab Simulator</title>
+    <meta name="description"
+        content="Master the CCNA exam with Boson-level questions and interactive network lab simulations">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                    </svg>
+                </div>
+                <span class="logo-text">CCNA<span class="logo-highlight">Master</span></span>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-view="dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                    Dashboard
+                </button>
+                <button class="nav-btn" data-view="quiz">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                    Quiz Mode
+                </button>
+                <button class="nav-btn" data-view="lab">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" />
+                        <line x1="8" y1="21" x2="16" y2="21" />
+                        <line x1="12" y1="17" x2="12" y2="21" />
+                    </svg>
+                    Network Lab
+                </button>
+            </nav>
+            <div class="header-stats">
+                <div class="stat-badge">
+                    <span class="stat-value" id="totalScore">0</span>
+                    <span class="stat-label">Score</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Dashboard View -->
+        <section id="dashboard" class="view active">
+            <div class="dashboard-hero">
+                <div class="hero-content">
+                    <h1>Welcome to <span class="gradient-text">CCNA Master</span></h1>
+                    <p>Your path to CCNA certification starts here. Practice with Boson-level exam questions and
+                        visualize network concepts in our interactive lab.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" onclick="showQuizModeModal()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3" />
+                            </svg>
+                            Start Quiz
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="openLab()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" />
+                                <line x1="8" y1="21" x2="16" y2="21" />
+                                <line x1="12" y1="17" x2="12" y2="21" />
+                            </svg>
+                            Interactive Lab
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-graphic">
+                    <div class="network-preview">
+                        <div class="device router" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <div class="device-icon">R1</div>
+                            <div class="device-pulse"></div>
+                        </div>
+                        <div class="device switch" style="top: 20%; left: 30%;">
+                            <div class="device-icon">SW1</div>
+                        </div>
+                        <div class="device switch" style="top: 20%; left: 70%;">
+                            <div class="device-icon">SW2</div>
+                        </div>
+                        <div class="device pc" style="top: 75%; left: 20%;">
+                            <div class="device-icon">PC1</div>
+                        </div>
+                        <div class="device pc" style="top: 75%; left: 80%;">
+                            <div class="device-icon">PC2</div>
+                        </div>
+                        <svg class="connections">
+                            <line class="connection" x1="50%" y1="50%" x2="30%" y2="20%" />
+                            <line class="connection" x1="50%" y1="50%" x2="70%" y2="20%" />
+                            <line class="connection" x1="30%" y1="20%" x2="20%" y2="75%" />
+                            <line class="connection" x1="70%" y1="20%" x2="80%" y2="75%" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain Progress Cards -->
+            <div class="section-header">
+                <h2>Exam Domains</h2>
+                <p>Track your progress across all CCNA certification topics</p>
+            </div>
+            <div class="domain-grid">
+                <div class="domain-card" data-domain="network-fundamentals">
+                    <div class="domain-header">
+                        <div class="domain-icon fundamentals">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <path
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                        </div>
+                        <span class="domain-weight">20%</span>
+                    </div>
+                    <h3>Network Fundamentals</h3>
+                    <p>OSI model, TCP/IP, network topologies, cabling</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-domain="network-fundamentals"></div>
+                    </div>
+                    <span class="progress-text">0/4 questions</span>
+                </div>
+
+                <div class="domain-card" data-domain="network-access">
+                    <div class="domain-header">
+                        <div class="domain-icon access">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                                <line x1="12" y1="20" x2="12.01" y2="20" />
+                            </svg>
+                        </div>
+                        <span class="domain-weight">20%</span>
+                    </div>
+                    <h3>Network Access</h3>
+                    <p>VLANs, trunking, EtherChannel, STP, wireless</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-domain="network-access"></div>
+                    </div>
+                    <span class="progress-text">0/4 questions</span>
+                </div>
+
+                <div class="domain-card" data-domain="ip-connectivity">
+                    <div class="domain-header">
+                        <div class="domain-icon connectivity">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>
+                        </div>
+                        <span class="domain-weight">25%</span>
+                    </div>
+                    <h3>IP Connectivity</h3>
+                    <p>Routing protocols, static routes, OSPF, first hop redundancy</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-domain="ip-connectivity"></div>
+                    </div>
+                    <span class="progress-text">0/5 questions</span>
+                </div>
+
+                <div class="domain-card" data-domain="ip-services">
+                    <div class="domain-header">
+                        <div class="domain-icon services">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="8" rx="2" />
+                                <rect x="2" y="14" width="20" height="8" rx="2" />
+                                <line x1="6" y1="6" x2="6.01" y2="6" />
+                                <line x1="6" y1="18" x2="6.01" y2="18" />
+                            </svg>
+                        </div>
+                        <span class="domain-weight">10%</span>
+                    </div>
+                    <h3>IP Services</h3>
+                    <p>DHCP, NAT, NTP, DNS, SNMP, syslog</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-domain="ip-services"></div>
+                    </div>
+                    <span class="progress-text">0/2 questions</span>
+                </div>
+
+                <div class="domain-card" data-domain="security-fundamentals">
+                    <div class="domain-header">
+                        <div class="domain-icon security">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        </div>
+                        <span class="domain-weight">15%</span>
+                    </div>
+                    <h3>Security Fundamentals</h3>
+                    <p>AAA, ACLs, port security, DHCP snooping</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-domain="security-fundamentals"></div>
+                    </div>
+                    <span class="progress-text">0/3 questions</span>
+                </div>
+
+                <div class="domain-card" data-domain="automation">
+                    <div class="domain-header">
+                        <div class="domain-icon automation">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z" />
+                            </svg>
+                        </div>
+                        <span class="domain-weight">10%</span>
+                    </div>
+                    <h3>Automation & Programmability</h3>
+                    <p>REST APIs, configuration management, JSON, Ansible</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-domain="automation"></div>
+                    </div>
+                    <span class="progress-text">0/2 questions</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz View -->
+        <section id="quiz" class="view">
+            <div class="quiz-container">
+                <!-- Quiz Header -->
+                <div class="quiz-header">
+                    <div class="quiz-info">
+                        <span class="quiz-domain" id="currentDomain">All Domains</span>
+                        <span class="quiz-progress">Question <span id="currentQuestion">1</span> of <span
+                                id="totalQuestions">20</span></span>
+                    </div>
+                    <div class="quiz-timer" id="quizTimer">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        <span id="timerDisplay">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill" id="quizProgressFill"></div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="question-card" id="questionCard">
+                    <div class="question-number">Question <span id="qNum">1</span></div>
+                    <div class="question-text" id="questionText">
+                        Loading question...
+                    </div>
+
+                    <div class="answers-grid" id="answersGrid">
+                        <!-- Answers will be dynamically inserted -->
+                    </div>
+
+                    <!-- Inline Answer Feedback (appears within the question card) -->
+                    <div class="inline-feedback hidden" id="inlineFeedback">
+                        <div class="feedback-header" id="feedbackHeader">
+                            <!-- Correct/Incorrect indicator -->
+                        </div>
+                        <div class="feedback-content" id="feedbackContent">
+                            <!-- Explanation text -->
+                        </div>
+                        <div class="feedback-details" id="feedbackDetails">
+                            <!-- Why each answer is right/wrong -->
+                        </div>
+                    </div>
+
+                    <div class="question-actions">
+                        <button class="btn btn-secondary" id="viewLabBtn" onclick="viewInLab()" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" />
+                                <line x1="8" y1="21" x2="16" y2="21" />
+                                <line x1="12" y1="17" x2="12" y2="21" />
+                            </svg>
+                            View in Lab
+                        </button>
+                        <button class="btn btn-secondary hidden" id="nextBtn" onclick="nextQuestion()">
+                            Next Question
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                        </button>
+                        <button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()" disabled>
+                            Submit Answer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Inline Feedback is now within the question card for better UX -->
+
+                <!-- Quiz Complete Card -->
+                <div class="quiz-complete hidden" id="quizComplete">
+                    <div class="complete-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <h2>Quiz Complete!</h2>
+                    <div class="score-display">
+                        <span class="final-score" id="finalScore">0</span>
+                        <span class="score-total">/ <span id="finalTotal">20</span></span>
+                    </div>
+                    <p class="score-percentage" id="scorePercentage">0% Correct</p>
+                    <div class="domain-breakdown" id="domainBreakdown">
+                        <!-- Domain scores -->
+                    </div>
+                    <div class="complete-actions">
+                        <button class="btn btn-primary btn-lg" onclick="restartQuiz()">
+                            Take Another Quiz
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="reviewMissed()">
+                            Review Missed Questions
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lab View -->
+        <section id="lab" class="view">
+            <div class="lab-container">
+                <div class="lab-sidebar">
+                    <div class="lab-scenarios">
+                        <h3>Lab Scenarios</h3>
+                        <div class="scenario-list" id="scenarioList">
+                            <button class="scenario-btn active" data-scenario="basic-topology">
+                                <span class="scenario-icon">🌐</span>
+                                Basic Network Topology
+                            </button>
+                            <button class="scenario-btn" data-scenario="vlan-config">
+                                <span class="scenario-icon">🔀</span>
+                                VLAN Configuration
+                            </button>
+                            <button class="scenario-btn" data-scenario="static-routing">
+                                <span class="scenario-icon">🛤️</span>
+                                Static Routing
+                            </button>
+                            <button class="scenario-btn" data-scenario="ospf">
+                                <span class="scenario-icon">🔄</span>
+                                OSPF Configuration
+                            </button>
+                            <button class="scenario-btn" data-scenario="acl">
+                                <span class="scenario-icon">🛡️</span>
+                                Access Control Lists
+                            </button>
+                            <button class="scenario-btn" data-scenario="nat">
+                                <span class="scenario-icon">🔁</span>
+                                NAT Configuration
+                            </button>
+                        </div>
+                    </div>
+                    <div class="device-info" id="deviceInfo">
+                        <h3>Select a Device</h3>
+                        <p class="info-placeholder">Click on any device in the topology to view its configuration</p>
+                    </div>
+                </div>
+
+                <div class="lab-main">
+                    <div class="lab-header">
+                        <h2 id="labTitle">Basic Network Topology</h2>
+                        <p id="labDescription">A simple network with two routers, two switches, and four PCs</p>
+                    </div>
+
+                    <div class="network-canvas" id="networkCanvas">
+                        <!-- Network topology will be drawn here with SVG -->
+                        <svg class="topology-svg" id="topologySvg">
+                            <!-- Connection lines -->
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5"
+                                    orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#00d4ff" />
+                                </marker>
+                            </defs>
+                        </svg>
+                        <div class="devices-layer" id="devicesLayer">
+                            <!-- Devices will be dynamically inserted -->
+                        </div>
+                    </div>
+
+                    <div class="lab-console" id="labConsole">
+                        <div class="console-resize-handle" id="consoleResizeHandle" title="Drag to resize"></div>
+                        <div class="console-header">
+                            <span class="console-title">Interactive CLI</span>
+                            <span class="console-device" id="consoleDevice">No device selected</span>
+                        </div>
+                        <div class="console-content" id="consoleContent">
+                            <pre id="configOutput">! Click on a device to start configuring
+! Type 'help' for available commands
+!</pre>
+                        </div>
+                        <div class="console-input-area">
+                            <span class="console-prompt" id="cliPrompt">Router></span>
+                            <input type="text" id="cliInput" class="cli-input" placeholder="Enter command..."
+                                autocomplete="off" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Quiz Mode Modal -->
+    <div class="modal-overlay hidden" id="quizModeModal">
+        <div class="modal-content">
+            <h2>Select Quiz Mode</h2>
+            <p>Choose how you want to practice</p>
+            <div class="quiz-modes">
+                <button class="mode-card" onclick="startQuizWithMode('exam')">
+                    <div class="mode-icon exam">⏱️</div>
+                    <h3>Exam Mode</h3>
+                    <p>Timed (120 min) • 100 questions • Real exam experience</p>
+                </button>
+                <button class="mode-card" onclick="startQuizWithMode('practice')">
+                    <div class="mode-icon practice">📚</div>
+                    <h3>Practice Mode</h3>
+                    <p>No timer • Instant feedback • Learn at your pace</p>
+                </button>
+            </div>
+            <div class="domain-select">
+                <label for="domainFilter">Focus on domain:</label>
+                <select id="domainFilter">
+                    <option value="">All Domains</option>
+                    <option value="security-fundamentals">🛡️ Security Fundamentals (Your weakest: 20%)</option>
+                    <option value="network-access">📡 Network Access (40%)</option>
+                    <option value="ip-connectivity">🔀 IP Connectivity (48%)</option>
+                    <option value="ip-services">⚙️ IP Services (48%)</option>
+                    <option value="network-fundamentals">🌐 Network Fundamentals (53%)</option>
+                    <option value="automation">🤖 Automation (70%)</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="closeQuizModeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="questions.js"></script>
+    <script src="questions-security.js"></script>
+    <script src="questions-network-access.js"></script>
+    <script src="questions-ip-connectivity.js"></script>
+    <script src="questions-ip-services.js"></script>
+    <script src="questions-fundauto.js"></script>
+    <script src="questions-boson.js"></script>
+    <script src="questions-hardcore.js"></script>
+    <script src="lab.js"></script>
+    <script src="cli.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+# CCNA Prep - Git Ignore File
+
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+
+# Temporary files
+*.tmp
+*.temp
+~*
+*.swp
+*.swo
+
+# Test files
+test-*.js
+*-test.js
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.sublime-*
+.vs/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files (security)
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+credentials.json
+*credentials.json
+.tokens
+.secrets
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
