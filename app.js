@@ -1401,7 +1401,8 @@ function setFcMode(mode) {
         matchingModal.classList.add('hidden');
         
         matchingContainer.classList.remove('hidden');
-        startMatchingGame();
+        
+        showMatchingStartScreen();
     }
 }
 
@@ -1608,7 +1609,12 @@ function startMatchingGame() {
         });
     }
     
-    const numCards = Math.min(cards.length, 10);
+    if (cards.length < 8) {
+        showToast('Not enough flashcards for matching game. Need at least 8 cards.', 'error');
+        return;
+    }
+    
+    const numCards = 8;
     cards = shuffleArray(cards).slice(0, numCards);
     
     const shuffledDefs = shuffleArray([...cards]);
@@ -1621,12 +1627,18 @@ function startMatchingGame() {
         selectedTerm: null,
         selectedDef: null,
         timer: null,
-        startTime: Date.now(),
+        startTime: null,
         gameCards: cards,
         shuffledDefs: shuffledDefs
     };
     
-    document.getElementById('fcMatchModal').classList.add('hidden');
+    const startScreen = document.getElementById('fcMatchingStart');
+    const gameScreen = document.getElementById('fcMatchingGame');
+    const modal = document.getElementById('fcMatchModal');
+    
+    if (startScreen) startScreen.classList.add('hidden');
+    if (gameScreen) gameScreen.classList.remove('hidden');
+    modal.classList.add('hidden');
     
     renderMatchingGame();
     startMatchingTimer();
@@ -1636,6 +1648,47 @@ function startMatchingGame() {
     document.getElementById('fcMatchTotal').textContent = numCards;
 }
 
+function showMatchingStartScreen() {
+    let cards = [...flashcardBank];
+    
+    if (fcState.currentDomain !== 'all') {
+        cards = cards.filter(c => {
+            const mappedDomain = fcDomainMap[c.domain];
+            return mappedDomain === fcState.currentDomain;
+        });
+    }
+    
+    const availableCount = cards.length;
+    document.getElementById('fcMatchCardsAvailable').textContent = availableCount;
+    
+    const startScreen = document.getElementById('fcMatchingStart');
+    const gameScreen = document.getElementById('fcMatchingGame');
+    const startButton = startScreen ? startScreen.querySelector('.btn-primary') : null;
+    
+    if (startButton) {
+        if (availableCount < 8) {
+            startButton.disabled = true;
+            startButton.textContent = 'Not Enough Cards';
+        } else {
+            startButton.disabled = false;
+            startButton.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Start Matching Game
+            `;
+        }
+    }
+    
+    if (startScreen) startScreen.classList.remove('hidden');
+    if (gameScreen) gameScreen.classList.add('hidden');
+    
+    if (fcMatchState.timer) {
+        clearInterval(fcMatchState.timer);
+        fcMatchState.timer = null;
+    }
+}
+
 function startMatchingTimer() {
     if (fcMatchState.timer) {
         clearInterval(fcMatchState.timer);
@@ -1643,13 +1696,21 @@ function startMatchingTimer() {
     
     fcMatchState.startTime = Date.now();
     
+    const timerEl = document.getElementById('fcMatchTimer');
+    if (timerEl) {
+        timerEl.textContent = '00:00';
+    }
+    
     fcMatchState.timer = setInterval(() => {
         const elapsed = Math.floor((Date.now() - fcMatchState.startTime) / 1000);
         const minutes = Math.floor(elapsed / 60);
         const seconds = elapsed % 60;
         
-        document.getElementById('fcMatchTimer').textContent = 
-            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        const timerEl = document.getElementById('fcMatchTimer');
+        if (timerEl) {
+            timerEl.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
     }, 1000);
 }
 
@@ -1657,14 +1718,19 @@ function renderMatchingGame() {
     const termsList = document.getElementById('fcMatchTermsList');
     const defsList = document.getElementById('fcMatchDefsList');
     
+    if (!termsList || !defsList) {
+        console.error('Matching game elements not found');
+        return;
+    }
+    
     termsList.innerHTML = fcMatchState.gameCards.map(card => `
-        <div class="fc-match-card" data-id="${card.id}" onclick="handleTermClick(${card.id})">
+        <div class="fc-match-card" data-id="${card.id}" data-type="term" onclick="handleTermClick(${card.id})">
             <span class="fc-match-term">${card.term}</span>
         </div>
     `).join('');
     
     defsList.innerHTML = fcMatchState.shuffledDefs.map(card => `
-        <div class="fc-match-card" data-id="${card.id}" onclick="handleDefClick(${card.id})">
+        <div class="fc-match-card" data-id="${card.id}" data-type="def" onclick="handleDefClick(${card.id})">
             <span class="fc-match-def">${card.definition}</span>
         </div>
     `).join('');
@@ -1672,14 +1738,17 @@ function renderMatchingGame() {
 
 function handleTermClick(cardId) {
     if (fcMatchState.matches.includes(cardId)) return;
+    if (fcMatchState.selectedTerm === cardId) return;
     
     const termCards = document.querySelectorAll('#fcMatchTermsList .fc-match-card');
     termCards.forEach(card => {
         card.classList.remove('selected');
-        if (parseInt(card.dataset.id) === cardId) {
-            card.classList.add('selected');
-        }
     });
+    
+    const clickedCard = document.querySelector(`#fcMatchTermsList .fc-match-card[data-id="${cardId}"]`);
+    if (clickedCard) {
+        clickedCard.classList.add('selected');
+    }
     
     fcMatchState.selectedTerm = cardId;
     
@@ -1690,14 +1759,17 @@ function handleTermClick(cardId) {
 
 function handleDefClick(cardId) {
     if (fcMatchState.matches.includes(cardId)) return;
+    if (fcMatchState.selectedDef === cardId) return;
     
     const defCards = document.querySelectorAll('#fcMatchDefsList .fc-match-card');
     defCards.forEach(card => {
         card.classList.remove('selected');
-        if (parseInt(card.dataset.id) === cardId) {
-            card.classList.add('selected');
-        }
     });
+    
+    const clickedCard = document.querySelector(`#fcMatchDefsList .fc-match-card[data-id="${cardId}"]`);
+    if (clickedCard) {
+        clickedCard.classList.add('selected');
+    }
     
     fcMatchState.selectedDef = cardId;
     
@@ -1707,6 +1779,8 @@ function handleDefClick(cardId) {
 }
 
 function checkMatch() {
+    if (fcMatchState.selectedTerm === null || fcMatchState.selectedDef === null) return;
+    
     const termId = fcMatchState.selectedTerm;
     const defId = fcMatchState.selectedDef;
     
@@ -1714,6 +1788,12 @@ function checkMatch() {
     
     const termCard = document.querySelector(`#fcMatchTermsList .fc-match-card[data-id="${termId}"]`);
     const defCard = document.querySelector(`#fcMatchDefsList .fc-match-card[data-id="${defId}"]`);
+    
+    if (!termCard || !defCard) {
+        fcMatchState.selectedTerm = null;
+        fcMatchState.selectedDef = null;
+        return;
+    }
     
     if (termId === defId) {
         fcMatchState.score++;
@@ -1728,7 +1808,7 @@ function checkMatch() {
         document.getElementById('fcMatchScore').textContent = fcMatchState.score;
         document.getElementById('fcMatchCount').textContent = fcMatchState.matches.length;
         
-        if (fcMatchState.score === fcMatchState.gameCards.length) {
+        if (fcMatchState.matches.length === fcMatchState.gameCards.length) {
             setTimeout(() => {
                 showMatchResults();
             }, 500);
@@ -1761,6 +1841,11 @@ function showMatchResults() {
     document.getElementById('fcMatchFinalScore').textContent = fcMatchState.score;
     document.getElementById('fcMatchFinalTime').textContent = timeStr;
     document.getElementById('fcMatchAttempts').textContent = fcMatchState.attempts;
+    
+    const gameScreen = document.getElementById('fcMatchingGame');
+    if (gameScreen) {
+        gameScreen.classList.add('hidden');
+    }
     
     const modal = document.getElementById('fcMatchModal');
     modal.classList.remove('hidden');

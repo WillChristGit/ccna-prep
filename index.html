@@ -513,25 +513,57 @@
 
                 <!-- Matching Game Container -->
                 <div class="fc-matching-container hidden" id="fcMatchingContainer">
-                    <div class="fc-matching-header">
-                        <div class="fc-matching-stats">
-                            <span class="fc-match-timer" id="fcMatchTimer">00:00</span>
-                            <span class="fc-match-score">Score: <span id="fcMatchScore">0</span></span>
-                            <span class="fc-match-matches">Matches: <span id="fcMatchCount">0</span>/<span id="fcMatchTotal">0</span></span>
+                    <!-- Start Game Screen -->
+                    <div class="fc-matching-start" id="fcMatchingStart">
+                        <div class="fc-match-start-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5"/>
+                                <path d="M2 12l10 5 10-5"/>
+                            </svg>
                         </div>
+                        <h2>Matching Game</h2>
+                        <p>Test your knowledge by matching terms with their definitions!</p>
+                        <div class="fc-match-start-info">
+                            <div class="fc-match-info-item">
+                                <span class="fc-match-info-value">8</span>
+                                <span class="fc-match-info-label">Terms</span>
+                            </div>
+                            <div class="fc-match-info-item">
+                                <span class="fc-match-info-value" id="fcMatchCardsAvailable">0</span>
+                                <span class="fc-match-info-label">Available</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-lg" onclick="startMatchingGame()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                            Start Matching Game
+                        </button>
                     </div>
-                    <div class="fc-matching-grid">
-                        <div class="fc-matching-column" id="fcMatchingTerms">
-                            <h3>Terms</h3>
-                            <div class="fc-match-cards" id="fcMatchTermsList"></div>
+
+                    <!-- Active Game Screen -->
+                    <div class="fc-matching-game hidden" id="fcMatchingGame">
+                        <div class="fc-matching-header">
+                            <div class="fc-matching-stats">
+                                <span class="fc-match-timer" id="fcMatchTimer">00:00</span>
+                                <span class="fc-match-score">Score: <span id="fcMatchScore">0</span></span>
+                                <span class="fc-match-matches">Matches: <span id="fcMatchCount">0</span>/<span id="fcMatchTotal">8</span></span>
+                            </div>
                         </div>
-                        <div class="fc-matching-column" id="fcMatchingDefs">
-                            <h3>Definitions</h3>
-                            <div class="fc-match-cards" id="fcMatchDefsList"></div>
+                        <div class="fc-matching-grid">
+                            <div class="fc-matching-column" id="fcMatchingTerms">
+                                <h3>Terms</h3>
+                                <div class="fc-match-cards" id="fcMatchTermsList"></div>
+                            </div>
+                            <div class="fc-matching-column" id="fcMatchingDefs">
+                                <h3>Definitions</h3>
+                                <div class="fc-match-cards" id="fcMatchDefsList"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="fc-matching-instructions">
-                        <p>Click a term, then click its matching definition. Match all pairs to win!</p>
+                        <div class="fc-matching-instructions">
+                            <p>Click a term, then click its matching definition. Match all pairs to win!</p>
+                        </div>
                     </div>
                 </div>
 

@@ -2833,3 +2833,77 @@ body {
         width: 100%;
     }
 }
+
+/* ============================================
+   Matching Game Start Screen
+   ============================================ */
+.fc-matching-start {
+    text-align: center;
+    padding: var(--spacing-xxl);
+    background: var(--gradient-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+}
+
+.fc-match-start-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-500), var(--accent-purple));
+    border-radius: 50%;
+}
+
+.fc-match-start-icon svg {
+    width: 40px;
+    height: 40px;
+    color: white;
+}
+
+.fc-matching-start h2 {
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.fc-matching-start > p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    font-size: 1rem;
+}
+
+.fc-match-start-info {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xxl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.fc-match-info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fc-match-info-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-500);
+}
+
+.fc-match-info-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.fc-matching-start .btn {
+    padding: var(--spacing-md) var(--spacing-xxl);
+}
+
+.fc-matching-game.hidden {
+    display: none;
+}
