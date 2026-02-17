@@ -1815,3 +1815,710 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================
+   Compact Quiz - Single Window Layout
+   ============================================ */
+.quiz-compact {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.quiz-compact .question-card {
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.question-compact {
+    border-radius: var(--radius-lg);
+}
+
+.question-compact .question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.question-compact .question-number {
+    margin-bottom: 0;
+}
+
+.question-compact .question-text {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+.question-compact .answers-grid {
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.question-compact .answer-option {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+}
+
+.question-compact .answer-text {
+    font-size: 0.9rem;
+}
+
+.question-compact .inline-feedback {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+}
+
+.question-compact .feedback-content {
+    font-size: 0.9rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.question-compact .option-explanation {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.85rem;
+}
+
+.question-compact .question-actions {
+    padding-top: var(--spacing-sm);
+}
+
+.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+}
+
+.btn-sm svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ============================================
+   Flash Cards View
+   ============================================ */
+.flashcards-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+.flashcards-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--gradient-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+}
+
+.flashcards-title h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+}
+
+.flashcards-title p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.flashcards-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+#fcCardCount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-500);
+}
+
+.fc-progress-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Subsection Tabs */
+.fc-subsection-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-sm);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+}
+
+.fc-subsection-tab {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-family: var(--font-primary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.fc-subsection-tab:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.fc-subsection-tab.active {
+    background: var(--primary-500);
+    color: var(--bg-primary);
+    font-weight: 600;
+}
+
+/* Flash Card */
+.flashcard-wrapper {
+    perspective: 1000px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.flashcard {
+    position: relative;
+    width: 100%;
+    min-height: 280px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flashcard.flipped {
+    transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+    position: absolute;
+    width: 100%;
+    min-height: 280px;
+    backface-visibility: hidden;
+    padding: var(--spacing-xl);
+    background: var(--gradient-card);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.flashcard:hover .flashcard-front,
+.flashcard:hover .flashcard-back {
+    border-color: var(--primary-500);
+    box-shadow: var(--shadow-glow);
+}
+
+.flashcard-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.1) 0%, rgba(17, 24, 39, 0.95) 100%);
+}
+
+.flashcard-domain {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-500);
+    margin-bottom: var(--spacing-xs);
+}
+
+.flashcard-subsection {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-md);
+}
+
+.flashcard-term {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.flashcard-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.flashcard-definition {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.flashcard-example {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary-500);
+}
+
+/* Flash Card Controls */
+.flashcard-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
+    background: var(--gradient-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+}
+
+.flashcard-controls .btn {
+    min-width: 120px;
+}
+
+.btn-tts {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--accent-purple) !important;
+    color: var(--accent-purple) !important;
+}
+
+.btn-tts:hover {
+    background: rgba(168, 85, 247, 0.2) !important;
+    border-color: var(--accent-purple) !important;
+    color: var(--accent-purple) !important;
+}
+
+.btn-tts svg {
+    width: 18px;
+    height: 18px;
+}
+
+.fc-indicators {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.fc-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    transition: all var(--transition-fast);
+}
+
+.fc-indicator.active {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+.fc-indicator.reviewed {
+    background: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+.fc-keyboard-hints {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-sm);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.fc-keyboard-hints span {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.fc-keyboard-hints kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+/* Flash Card Quiz Mode */
+.fc-quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    background: var(--gradient-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+}
+
+.fc-quiz-header {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.fc-quiz-progress {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.fc-quiz-progress-bar {
+    height: 4px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--spacing-xl);
+    overflow: hidden;
+}
+
+.fc-quiz-progress-fill {
+    height: 100%;
+    background: var(--primary-500);
+    transition: width var(--transition-normal);
+}
+
+.fc-quiz-question {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    white-space: pre-wrap;
+}
+
+.fc-quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.fc-quiz-option {
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.fc-quiz-option:hover:not(.disabled) {
+    background: var(--bg-tertiary);
+    border-color: var(--primary-500);
+    transform: translateX(4px);
+}
+
+.fc-quiz-option.disabled {
+    cursor: default;
+    opacity: 0.8;
+}
+
+.fc-quiz-option.correct {
+    background: rgba(0, 255, 136, 0.15);
+    border-color: var(--accent-green);
+}
+
+.fc-quiz-option.incorrect {
+    background: rgba(255, 71, 87, 0.15);
+    border-color: var(--accent-red);
+}
+
+/* Flash Card Quiz Results */
+.fc-quiz-results {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: var(--spacing-xxl);
+    background: var(--gradient-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    text-align: center;
+}
+
+.fc-results-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--spacing-xl);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-500), var(--accent-green));
+}
+
+.fc-results-icon svg {
+    width: 40px;
+    height: 40px;
+    color: white;
+}
+
+.fc-quiz-results h2 {
+    font-size: 1.8rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
+.fc-score-display {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.fc-score-total {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+}
+
+.fc-score-percentage {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.fc-results-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* Flashcards Controls (header) */
+.flashcards-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.flashcards-controls .btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.flashcards-controls .btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Domain Selection Grid */
+.fc-domain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.fc-domain-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.fc-domain-card:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+}
+
+.fc-domain-card.active {
+    border-color: var(--primary-500);
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.fc-domain-icon {
+    font-size: 2rem;
+}
+
+.fc-domain-card span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.fc-domain-card.active span {
+    color: var(--primary-500);
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+@media (max-width: 768px) {
+    .flashcards-header {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+
+    .flashcards-stats {
+        align-items: center;
+    }
+
+    .flashcard-controls {
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+        justify-content: center;
+    }
+
+    .flashcard-controls .btn {
+        min-width: 100px;
+    }
+
+    .fc-indicators {
+        order: -1;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   Spaced Repetition Difficulty Buttons
+   ============================================ */
+.difficulty-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.difficulty-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.difficulty-btn-group {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-difficulty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-width: 80px;
+}
+
+.btn-difficulty:hover {
+    transform: translateY(-2px);
+}
+
+.btn-difficulty:active {
+    transform: translateY(0);
+}
+
+.diff-label {
+    font-size: 0.9rem;
+}
+
+.diff-key {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+.btn-again {
+    background: linear-gradient(135deg, #ff4757, #dc2626);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+}
+
+.btn-again:hover {
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.5);
+}
+
+.btn-hard {
+    background: linear-gradient(135deg, #ffa502, #d97706);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 165, 2, 0.3);
+}
+
+.btn-hard:hover {
+    box-shadow: 0 6px 20px rgba(255, 165, 2, 0.5);
+}
+
+.btn-good {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-good:hover {
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+.btn-easy {
+    background: linear-gradient(135deg, #00ff88, #00cc6a);
+    color: #0a0e17;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.btn-easy:hover {
+    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+}
+
+/* Due count badge */
+.fc-due-count {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: rgba(255, 165, 2, 0.15);
+    border: 1px solid rgba(255, 165, 2, 0.3);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    color: var(--accent-orange);
+    margin-left: var(--spacing-md);
+}
+
+.fc-due-count span:first-child {
+    font-weight: 700;
+}

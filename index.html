@@ -47,6 +47,14 @@
                     </svg>
                     Quiz Mode
                 </button>
+                <button class="nav-btn" data-view="flashcards">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <path d="M12 8v8" />
+                        <path d="M8 12h8" />
+                    </svg>
+                    Flash Cards
+                </button>
                 <button class="nav-btn" data-view="lab">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -241,7 +249,7 @@
 
         <!-- Quiz View -->
         <section id="quiz" class="view">
-            <div class="quiz-container">
+            <div class="quiz-container quiz-compact">
                 <!-- Quiz Header -->
                 <div class="quiz-header">
                     <div class="quiz-info">
@@ -263,9 +271,19 @@
                     <div class="quiz-progress-fill" id="quizProgressFill"></div>
                 </div>
 
-                <!-- Question Card -->
-                <div class="question-card" id="questionCard">
-                    <div class="question-number">Question <span id="qNum">1</span></div>
+                <!-- Question Card - Compact Layout -->
+                <div class="question-card question-compact" id="questionCard">
+                    <div class="question-header">
+                        <div class="question-number">Question <span id="qNum">1</span></div>
+                        <button class="btn btn-secondary btn-sm" id="viewLabBtn" onclick="viewInLab()" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <rect x="2" y="3" width="20" height="14" rx="2" />
+                                <line x1="8" y1="21" x2="16" y2="21" />
+                                <line x1="12" y1="17" x2="12" y2="21" />
+                            </svg>
+                            Lab
+                        </button>
+                    </div>
                     <div class="question-text" id="questionText">
                         Loading question...
                     </div>
@@ -274,42 +292,26 @@
                         <!-- Answers will be dynamically inserted -->
                     </div>
 
-                    <!-- Inline Answer Feedback (appears within the question card) -->
+                    <!-- Inline Answer Feedback -->
                     <div class="inline-feedback hidden" id="inlineFeedback">
-                        <div class="feedback-header" id="feedbackHeader">
-                            <!-- Correct/Incorrect indicator -->
-                        </div>
-                        <div class="feedback-content" id="feedbackContent">
-                            <!-- Explanation text -->
-                        </div>
-                        <div class="feedback-details" id="feedbackDetails">
-                            <!-- Why each answer is right/wrong -->
-                        </div>
+                        <div class="feedback-header" id="feedbackHeader"></div>
+                        <div class="feedback-content" id="feedbackContent"></div>
+                        <div class="feedback-details" id="feedbackDetails"></div>
                     </div>
 
                     <div class="question-actions">
-                        <button class="btn btn-secondary" id="viewLabBtn" onclick="viewInLab()" disabled>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="2" y="3" width="20" height="14" rx="2" />
-                                <line x1="8" y1="21" x2="16" y2="21" />
-                                <line x1="12" y1="17" x2="12" y2="21" />
-                            </svg>
-                            View in Lab
+                        <button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()" disabled>
+                            Submit Answer
                         </button>
                         <button class="btn btn-secondary hidden" id="nextBtn" onclick="nextQuestion()">
-                            Next Question
+                            Next
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="5" y1="12" x2="19" y2="12" />
                                 <polyline points="12 5 19 12 12 19" />
                             </svg>
                         </button>
-                        <button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()" disabled>
-                            Submit Answer
-                        </button>
                     </div>
                 </div>
-
-                <!-- Inline Feedback is now within the question card for better UX -->
 
                 <!-- Quiz Complete Card -->
                 <div class="quiz-complete hidden" id="quizComplete">
@@ -325,9 +327,7 @@
                         <span class="score-total">/ <span id="finalTotal">20</span></span>
                     </div>
                     <p class="score-percentage" id="scorePercentage">0% Correct</p>
-                    <div class="domain-breakdown" id="domainBreakdown">
-                        <!-- Domain scores -->
-                    </div>
+                    <div class="domain-breakdown" id="domainBreakdown"></div>
                     <div class="complete-actions">
                         <button class="btn btn-primary btn-lg" onclick="restartQuiz()">
                             Take Another Quiz
@@ -336,6 +336,196 @@
                             Review Missed Questions
                         </button>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flash Cards View -->
+        <section id="flashcards" class="view">
+            <div class="flashcards-container">
+                <div class="flashcards-header">
+                    <div class="flashcards-title">
+                        <h1>Flash Cards</h1>
+                        <p>Study CCNA concepts by subsection</p>
+                    </div>
+                    <div class="flashcards-controls">
+                        <button class="btn btn-secondary" id="fcModeToggle" onclick="toggleFcMode()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                            Quiz Mode
+                        </button>
+                        <div class="flashcards-stats">
+                            <span id="fcCardCount">0 / 0</span>
+                            <span class="fc-progress-text">cards reviewed</span>
+                            <span class="fc-due-count">
+                                <span id="fcDueCount">0</span> due for review
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subsection Tabs -->
+                <div class="fc-subsection-tabs" id="fcSubsectionTabs">
+                    <!-- Dynamically populated -->
+                </div>
+
+                <!-- Flash Card -->
+                <div class="flashcard-wrapper" id="flashcardWrapper">
+                    <div class="flashcard" id="flashcard">
+                        <div class="flashcard-front">
+                            <div class="flashcard-domain" id="fcDomain">Network Fundamentals</div>
+                            <div class="flashcard-subsection" id="fcSubsection">OSI Model</div>
+                            <div class="flashcard-term" id="fcTerm">Loading...</div>
+                            <div class="flashcard-hint">Click to reveal definition</div>
+                        </div>
+                        <div class="flashcard-back">
+                            <div class="flashcard-definition" id="fcDefinition">Loading...</div>
+                            <div class="flashcard-example" id="fcExample"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Difficulty Buttons -->
+                <div class="difficulty-buttons hidden" id="difficultyButtons">
+                    <span class="difficulty-label">How well did you know this?</span>
+                    <div class="difficulty-btn-group">
+                        <button class="btn btn-difficulty btn-again" onclick="rateCard(1)">
+                            <span class="diff-label">Again</span>
+                            <span class="diff-key">1</span>
+                        </button>
+                        <button class="btn btn-difficulty btn-hard" onclick="rateCard(3)">
+                            <span class="diff-label">Hard</span>
+                            <span class="diff-key">2</span>
+                        </button>
+                        <button class="btn btn-difficulty btn-good" onclick="rateCard(4)">
+                            <span class="diff-label">Good</span>
+                            <span class="diff-key">3</span>
+                        </button>
+                        <button class="btn btn-difficulty btn-easy" onclick="rateCard(5)">
+                            <span class="diff-label">Easy</span>
+                            <span class="diff-key">4</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Flash Card Controls -->
+                <div class="flashcard-controls">
+                    <button class="btn btn-secondary" onclick="fcPrevCard()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Previous
+                    </button>
+                    <div class="fc-indicators" id="fcIndicators"></div>
+                    <button class="btn btn-secondary" onclick="shuffleFlashcards()" title="Shuffle (R)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 3 21 3 21 8" />
+                            <line x1="4" y1="20" x2="21" y2="3" />
+                            <polyline points="21 16 21 21 16 21" />
+                            <line x1="15" y1="15" x2="21" y2="21" />
+                            <line x1="4" y1="4" x2="9" y2="9" />
+                        </svg>
+                        Shuffle
+                    </button>
+                    <button class="btn btn-secondary btn-tts" onclick="speakFlashcard()" title="Read aloud (S)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                        </svg>
+                        Speak
+                    </button>
+                    <button class="btn btn-primary" onclick="fcNextCard()">
+                        Next
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="fc-keyboard-hints">
+                    <span><kbd>Space</kbd> Flip</span>
+                    <span><kbd>←</kbd><kbd>→</kbd> Navigate</span>
+                    <span><kbd>R</kbd> Shuffle</span>
+                    <span><kbd>S</kbd> Speak</span>
+                    <span><kbd>1-4</kbd> Rate</span>
+                </div>
+
+                <!-- Flash Card Quiz Container -->
+                <div class="fc-quiz-container hidden" id="fcQuizContainer">
+                    <div class="fc-quiz-header">
+                        <span class="fc-quiz-progress">Question <span id="fcQuizQuestionNum">1</span> of <span id="fcQuizTotal">10</span></span>
+                    </div>
+                    <div class="fc-quiz-progress-bar">
+                        <div class="fc-quiz-progress-fill" id="fcQuizProgressFill" style="width: 0%"></div>
+                    </div>
+                    <div class="fc-quiz-question" id="fcQuizQuestionText">
+                        Loading question...
+                    </div>
+                    <div class="fc-quiz-options" id="fcQuizOptions">
+                        <!-- Options will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <!-- Flash Card Quiz Results -->
+                <div class="fc-quiz-results hidden" id="fcQuizResults">
+                    <div class="fc-results-icon" id="fcResultsIcon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <h2>Quiz Complete!</h2>
+                    <div class="fc-score-display">
+                        <span class="fc-final-score" id="fcFinalScore">0</span>
+                        <span class="fc-score-total">/ <span id="fcFinalTotal">10</span></span>
+                    </div>
+                    <p class="fc-score-percentage" id="fcScorePercent">0% Correct</p>
+                    <div class="fc-results-actions">
+                        <button class="btn btn-primary btn-lg" onclick="toggleFcMode()">
+                            Back to Study
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="retryFcQuiz()">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Domain Selection for Flash Cards -->
+                <div class="fc-domain-grid" id="fcDomainGrid">
+                    <button class="fc-domain-card active" data-domain="all">
+                        <div class="fc-domain-icon">📚</div>
+                        <span>All Domains</span>
+                    </button>
+                    <button class="fc-domain-card" data-domain="network-fundamentals">
+                        <div class="fc-domain-icon">🌐</div>
+                        <span>Network Fundamentals</span>
+                    </button>
+                    <button class="fc-domain-card" data-domain="network-access">
+                        <div class="fc-domain-icon">📡</div>
+                        <span>Network Access</span>
+                    </button>
+                    <button class="fc-domain-card" data-domain="ip-connectivity">
+                        <div class="fc-domain-icon">🔀</div>
+                        <span>IP Connectivity</span>
+                    </button>
+                    <button class="fc-domain-card" data-domain="ip-services">
+                        <div class="fc-domain-icon">⚙️</div>
+                        <span>IP Services</span>
+                    </button>
+                    <button class="fc-domain-card" data-domain="security-fundamentals">
+                        <div class="fc-domain-icon">🛡️</div>
+                        <span>Security</span>
+                    </button>
+                    <button class="fc-domain-card" data-domain="automation">
+                        <div class="fc-domain-icon">🤖</div>
+                        <span>Automation</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -460,6 +650,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="flashcards.js"></script>
     <script src="questions.js"></script>
     <script src="questions-security.js"></script>
     <script src="questions-network-access.js"></script>
