@@ -831,6 +831,19 @@ const fcQuizState = {
     quizCards: []
 };
 
+const fcMatchState = {
+    mode: 'matching',
+    score: 0,
+    attempts: 0,
+    matches: [],
+    selectedTerm: null,
+    selectedDef: null,
+    timer: null,
+    startTime: null,
+    gameCards: [],
+    shuffledDefs: []
+};
+
 const fcDomainNames = {
     'Network Fundamentals': 'Network Fundamentals',
     'Network Access': 'Network Access',
@@ -1325,39 +1338,73 @@ function updateFcProgressStats() {
 // Flash Card Quiz Mode
 // ============================================
 
-function toggleFcMode() {
-    const modeBtn = document.getElementById('fcModeToggle');
+// ============================================
+// Flash Card Mode Toggle (Study/Quiz/Matching)
+// ============================================
+
+function setFcMode(mode) {
     const studyContainer = document.getElementById('flashcardWrapper');
     const quizContainer = document.getElementById('fcQuizContainer');
     const quizResults = document.getElementById('fcQuizResults');
+    const matchingContainer = document.getElementById('fcMatchingContainer');
+    const matchingModal = document.getElementById('fcMatchModal');
     
-    if (fcQuizState.mode === 'study') {
-        fcQuizState.mode = 'quiz';
-        modeBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M12 8v8"/>
-                <path d="M8 12h8"/>
-            </svg>
-            Study Mode
-        `;
-        studyContainer.classList.add('hidden');
-        quizContainer.classList.remove('hidden');
-        hideDifficultyButtons();
-        startFcQuiz();
-    } else {
+    document.querySelectorAll('.fc-mode-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('fcStudyBtn').classList.remove('active');
+    document.getElementById('fcQuizBtn').classList.remove('active');
+    document.getElementById('fcMatchBtn').classList.remove('active');
+    
+    hideDifficultyButtons();
+    
+    if (mode === 'study') {
         fcQuizState.mode = 'study';
-        modeBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                <line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-            Quiz Mode
-        `;
+        document.getElementById('fcStudyBtn').classList.add('active');
+        
         studyContainer.classList.remove('hidden');
         quizContainer.classList.add('hidden');
         quizResults.classList.add('hidden');
+        matchingContainer.classList.add('hidden');
+        matchingModal.classList.add('hidden');
+        
+        if (fcMatchState.timer) {
+            clearInterval(fcMatchState.timer);
+            fcMatchState.timer = null;
+        }
+    } else if (mode === 'quiz') {
+        fcQuizState.mode = 'quiz';
+        document.getElementById('fcQuizBtn').classList.add('active');
+        
+        studyContainer.classList.add('hidden');
+        quizResults.classList.add('hidden');
+        matchingContainer.classList.add('hidden');
+        matchingModal.classList.add('hidden');
+        
+        if (fcMatchState.timer) {
+            clearInterval(fcMatchState.timer);
+            fcMatchState.timer = null;
+        }
+        
+        quizContainer.classList.remove('hidden');
+        startFcQuiz();
+    } else if (mode === 'matching') {
+        fcMatchState.mode = 'matching';
+        document.getElementById('fcMatchBtn').classList.add('active');
+        
+        studyContainer.classList.add('hidden');
+        quizContainer.classList.add('hidden');
+        quizResults.classList.add('hidden');
+        matchingModal.classList.add('hidden');
+        
+        matchingContainer.classList.remove('hidden');
+        startMatchingGame();
+    }
+}
+
+function toggleFcMode() {
+    if (fcQuizState.mode === 'study') {
+        setFcMode('quiz');
+    } else {
+        setFcMode('study');
     }
 }
 
@@ -1540,6 +1587,188 @@ function retryFcQuiz() {
     quizContainer.classList.remove('hidden');
     
     startFcQuiz();
+}
+
+// ============================================
+// Flash Card Matching Game
+// ============================================
+
+function startMatchingGame() {
+    let cards = [...flashcardBank];
+    
+    if (fcState.currentDomain !== 'all') {
+        cards = cards.filter(c => {
+            const mappedDomain = fcDomainMap[c.domain];
+            return mappedDomain === fcState.currentDomain;
+        });
+    }
+    
+    const numCards = Math.min(cards.length, 10);
+    cards = shuffleArray(cards).slice(0, numCards);
+    
+    const shuffledDefs = shuffleArray([...cards]);
+    
+    fcMatchState = {
+        mode: 'matching',
+        score: 0,
+        attempts: 0,
+        matches: [],
+        selectedTerm: null,
+        selectedDef: null,
+        timer: null,
+        startTime: Date.now(),
+        gameCards: cards,
+        shuffledDefs: shuffledDefs
+    };
+    
+    document.getElementById('fcMatchModal').classList.add('hidden');
+    
+    renderMatchingGame();
+    startMatchingTimer();
+    
+    document.getElementById('fcMatchScore').textContent = '0';
+    document.getElementById('fcMatchCount').textContent = '0';
+    document.getElementById('fcMatchTotal').textContent = numCards;
+}
+
+function startMatchingTimer() {
+    if (fcMatchState.timer) {
+        clearInterval(fcMatchState.timer);
+    }
+    
+    fcMatchState.startTime = Date.now();
+    
+    fcMatchState.timer = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - fcMatchState.startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        
+        document.getElementById('fcMatchTimer').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+}
+
+function renderMatchingGame() {
+    const termsList = document.getElementById('fcMatchTermsList');
+    const defsList = document.getElementById('fcMatchDefsList');
+    
+    termsList.innerHTML = fcMatchState.gameCards.map(card => `
+        <div class="fc-match-card" data-id="${card.id}" onclick="handleTermClick(${card.id})">
+            <span class="fc-match-term">${card.term}</span>
+        </div>
+    `).join('');
+    
+    defsList.innerHTML = fcMatchState.shuffledDefs.map(card => `
+        <div class="fc-match-card" data-id="${card.id}" onclick="handleDefClick(${card.id})">
+            <span class="fc-match-def">${card.definition}</span>
+        </div>
+    `).join('');
+}
+
+function handleTermClick(cardId) {
+    if (fcMatchState.matches.includes(cardId)) return;
+    
+    const termCards = document.querySelectorAll('#fcMatchTermsList .fc-match-card');
+    termCards.forEach(card => {
+        card.classList.remove('selected');
+        if (parseInt(card.dataset.id) === cardId) {
+            card.classList.add('selected');
+        }
+    });
+    
+    fcMatchState.selectedTerm = cardId;
+    
+    if (fcMatchState.selectedDef !== null) {
+        checkMatch();
+    }
+}
+
+function handleDefClick(cardId) {
+    if (fcMatchState.matches.includes(cardId)) return;
+    
+    const defCards = document.querySelectorAll('#fcMatchDefsList .fc-match-card');
+    defCards.forEach(card => {
+        card.classList.remove('selected');
+        if (parseInt(card.dataset.id) === cardId) {
+            card.classList.add('selected');
+        }
+    });
+    
+    fcMatchState.selectedDef = cardId;
+    
+    if (fcMatchState.selectedTerm !== null) {
+        checkMatch();
+    }
+}
+
+function checkMatch() {
+    const termId = fcMatchState.selectedTerm;
+    const defId = fcMatchState.selectedDef;
+    
+    fcMatchState.attempts++;
+    
+    const termCard = document.querySelector(`#fcMatchTermsList .fc-match-card[data-id="${termId}"]`);
+    const defCard = document.querySelector(`#fcMatchDefsList .fc-match-card[data-id="${defId}"]`);
+    
+    if (termId === defId) {
+        fcMatchState.score++;
+        fcMatchState.matches.push(termId);
+        
+        termCard.classList.remove('selected');
+        termCard.classList.add('correct', 'matched');
+        
+        defCard.classList.remove('selected');
+        defCard.classList.add('correct', 'matched');
+        
+        document.getElementById('fcMatchScore').textContent = fcMatchState.score;
+        document.getElementById('fcMatchCount').textContent = fcMatchState.matches.length;
+        
+        if (fcMatchState.score === fcMatchState.gameCards.length) {
+            setTimeout(() => {
+                showMatchResults();
+            }, 500);
+        }
+    } else {
+        termCard.classList.add('incorrect');
+        defCard.classList.add('incorrect');
+        
+        setTimeout(() => {
+            termCard.classList.remove('selected', 'incorrect');
+            defCard.classList.remove('selected', 'incorrect');
+        }, 600);
+    }
+    
+    fcMatchState.selectedTerm = null;
+    fcMatchState.selectedDef = null;
+}
+
+function showMatchResults() {
+    if (fcMatchState.timer) {
+        clearInterval(fcMatchState.timer);
+        fcMatchState.timer = null;
+    }
+    
+    const elapsed = Math.floor((Date.now() - fcMatchState.startTime) / 1000);
+    const minutes = Math.floor(elapsed / 60);
+    const seconds = elapsed % 60;
+    const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    document.getElementById('fcMatchFinalScore').textContent = fcMatchState.score;
+    document.getElementById('fcMatchFinalTime').textContent = timeStr;
+    document.getElementById('fcMatchAttempts').textContent = fcMatchState.attempts;
+    
+    const modal = document.getElementById('fcMatchModal');
+    modal.classList.remove('hidden');
+    
+    const percentage = (fcMatchState.score / fcMatchState.gameCards.length) * 100;
+    
+    if (percentage >= 80) {
+        showToast('Excellent! You matched all terms!', 'success');
+    } else if (percentage >= 60) {
+        showToast('Good job! Keep practicing!', 'info');
+    } else {
+        showToast('Keep studying! You\'ll get better!', 'info');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

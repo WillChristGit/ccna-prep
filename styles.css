@@ -2522,3 +2522,314 @@ body {
 .fc-due-count span:first-child {
     font-weight: 700;
 }
+
+/* ============================================
+   Flash Card Matching Game
+   ============================================ */
+.fc-mode-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.85rem;
+}
+
+.fc-mode-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.fc-mode-btn.active {
+    background: var(--primary-500);
+    color: var(--bg-primary);
+    border-color: var(--primary-500);
+}
+
+.fc-mode-btn:not(.active):hover {
+    background: var(--bg-hover);
+}
+
+.fc-matching-container {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fc-matching-header {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    background: var(--gradient-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+}
+
+.fc-matching-stats {
+    display: flex;
+    gap: var(--spacing-xl);
+    align-items: center;
+    font-size: 1rem;
+}
+
+.fc-match-timer {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-500);
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+}
+
+.fc-match-score {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.fc-match-matches {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.fc-matching-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+}
+
+.fc-matching-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.fc-matching-column h3 {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.fc-match-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.fc-match-card {
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    text-align: left;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.fc-match-card:hover:not(.matched):not(.disabled) {
+    border-color: var(--primary-500);
+    background: var(--bg-hover);
+    transform: translateX(4px);
+}
+
+.fc-match-card.selected {
+    border-color: var(--primary-500);
+    background: rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 0 2px var(--primary-500);
+}
+
+.fc-match-card.correct {
+    border-color: var(--success-500);
+    background: rgba(0, 255, 136, 0.1);
+    animation: matchPulse 0.5s ease;
+}
+
+@keyframes matchPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.fc-match-card.incorrect {
+    border-color: var(--error-500);
+    background: rgba(255, 71, 87, 0.1);
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+.fc-match-card.matched {
+    opacity: 0.6;
+    cursor: default;
+    border-color: var(--success-500);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.fc-match-card.disabled {
+    pointer-events: none;
+}
+
+.fc-match-card .fc-match-term {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.fc-match-card .fc-match-def {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.fc-matching-instructions {
+    text-align: center;
+    padding: var(--spacing-md);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+/* Matching Game Modal */
+.fc-match-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 14, 23, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.fc-match-modal.hidden {
+    display: none;
+}
+
+.fc-match-modal-content {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    animation: modalSlide 0.4s ease;
+}
+
+@keyframes modalSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.fc-match-modal-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--spacing-lg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #00ff88, #059669);
+}
+
+.fc-match-modal-icon svg {
+    width: 40px;
+    height: 40px;
+    stroke: white;
+}
+
+.fc-match-modal h2 {
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
+.fc-match-modal-stats {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.fc-match-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fc-match-stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-500);
+}
+
+.fc-match-stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.fc-match-modal-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+}
+
+/* Mobile responsiveness for matching game */
+@media (max-width: 768px) {
+    .fc-matching-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .fc-matching-stats {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .fc-match-card {
+        font-size: 0.85rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .fc-match-modal-stats {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .fc-match-modal-actions {
+        flex-direction: column;
+    }
+
+    .fc-match-modal-actions .btn {
+        width: 100%;
+    }
+}
