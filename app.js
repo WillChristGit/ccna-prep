@@ -1600,6 +1600,8 @@ function retryFcQuiz() {
 // ============================================
 
 function startMatchingGame() {
+    console.log('startMatchingGame called');
+    
     let cards = [...flashcardBank];
     
     if (fcState.currentDomain !== 'all') {
@@ -1608,6 +1610,8 @@ function startMatchingGame() {
             return mappedDomain === fcState.currentDomain;
         });
     }
+    
+    console.log('Available cards:', cards.length);
     
     if (cards.length < 8) {
         showToast('Not enough flashcards for matching game. Need at least 8 cards.', 'error');
@@ -1638,8 +1642,9 @@ function startMatchingGame() {
     
     if (startScreen) startScreen.classList.add('hidden');
     if (gameScreen) gameScreen.classList.remove('hidden');
-    modal.classList.add('hidden');
+    if (modal) modal.classList.add('hidden');
     
+    console.log('Rendering matching game');
     renderMatchingGame();
     startMatchingTimer();
     
@@ -1661,17 +1666,20 @@ function showMatchingStartScreen() {
     const availableCount = cards.length;
     document.getElementById('fcMatchCardsAvailable').textContent = availableCount;
     
-    const startScreen = document.getElementById('fcMatchingStart');
-    const gameScreen = document.getElementById('fcMatchingGame');
-    const startButton = startScreen ? startScreen.querySelector('.btn-primary') : null;
+    // Show start screen, hide game screen
+    document.getElementById('fcMatchingStart').classList.remove('hidden');
+    document.getElementById('fcMatchingGame').classList.add('hidden');
+    document.getElementById('fcMatchModal').classList.add('hidden');
     
-    if (startButton) {
+    // Enable/disable start button
+    const startBtn = document.querySelector('#fcMatchingStart .btn-primary');
+    if (startBtn) {
         if (availableCount < 8) {
-            startButton.disabled = true;
-            startButton.textContent = 'Not Enough Cards';
+            startBtn.disabled = true;
+            startBtn.innerHTML = 'Not Enough Cards';
         } else {
-            startButton.disabled = false;
-            startButton.innerHTML = `
+            startBtn.disabled = false;
+            startBtn.innerHTML = `
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="5 3 19 12 5 21 5 3"/>
                 </svg>
@@ -1679,9 +1687,6 @@ function showMatchingStartScreen() {
             `;
         }
     }
-    
-    if (startScreen) startScreen.classList.remove('hidden');
-    if (gameScreen) gameScreen.classList.add('hidden');
     
     if (fcMatchState.timer) {
         clearInterval(fcMatchState.timer);
