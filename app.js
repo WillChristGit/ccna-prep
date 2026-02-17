@@ -893,6 +893,11 @@ function loadFlashcards() {
     renderFcIndicators();
     updateFcCard();
     updateFcStats();
+    
+    // Ensure study mode is active on initial load
+    if (!fcQuizState.mode) {
+        setFcMode('study');
+    }
 }
 
 function renderFcSubsections() {
